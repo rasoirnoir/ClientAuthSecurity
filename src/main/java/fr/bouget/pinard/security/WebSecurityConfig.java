@@ -48,16 +48,32 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         	.and()
         	// nos endpoints (points d'entrée de notre API)
         	.authorizeRequests()
-      //  	.anyRequest().authenticated()
-        	.antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**")
-        	.permitAll()
         	.antMatchers("/api/user/sign-in").permitAll() // se connecter
         	.antMatchers("/api/user/sign-up").permitAll() // s'inscrire
         	.antMatchers("api/user/all").hasAuthority("ROLE_ADMIN") // que pour le rôle admin
-        	.antMatchers("/v2/api-docs", "/webjars/**", "/swagger-resources/**", "/configuration/**", "/swagger-ui.html/**").permitAll()
-        //	.antMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN") // que pour le rôle admin
+        	.antMatchers("/client/clients").hasAnyAuthority("ROLE_READER", "ROLE_CREATOR", "ROLE_ADMIN")
+        	.antMatchers("/client/**").hasAuthority("ROLE_ADMIN") 
         	// on désactive le reste...
-        	.anyRequest().authenticated(); // tout le reste est autorisé.
+        	.anyRequest().authenticated();
+        
+        
+//        http.csrf().disable()
+//    	.sessionManagement()
+//    	// Les sessions sont sans états et non créés ni utilisées par Spring security
+//    	.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//    	.and()
+//    	// nos endpoints (points d'entrée de notre API)
+//    	.authorizeRequests()
+//    	.anyRequest().authenticated()
+//    	.antMatchers("/api/user/sign-in").permitAll()
+//    	.antMatchers("/api/user/sign-up").permitAll();
+        
+        
+        
+        
+        
+        
+        
         // Appliquer JWT
         http.addFilterBefore(new JwtTokenFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
     	
